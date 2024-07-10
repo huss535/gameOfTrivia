@@ -1,3 +1,17 @@
-body {
-  background-color: blueviolet;
+.button {
+  background-color: #EF2323;
+  color: blanchedalmond;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block: 5px;
+  margin: 20px;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.button:hover {
+
+  background-color: #DECE9C;
+  color: black;
+
 }

@@ -1,10 +1,13 @@
+import Button from "../../components/Button";
+
 function HomePage() {
 
     return (
         <div>
             <h1>Game of trivia</h1>
-            <button style={{ backgroundColor: 'red' }}>Create Game</button>
-            <button >Join Game </button>
+            <Button buttonTitle="Join Game" eventHandler={() => { }} />
+            <Button buttonTitle="Create Game" eventHandler={() => { }} />
+
 
         </div>);
 }
