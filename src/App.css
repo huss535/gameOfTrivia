@@ -26,8 +26,11 @@ div {
 }
 
 
-.checkbox-container #checkBox label span {
-  /* Adjust spacing between checkbox and label text */
+.checkbox-container .checkBox label {
+  position: relative;
+}
+
+.checkbox-container .checkBox label span {
   border: solid;
   color: black;
   display: inline-block;
@@ -35,40 +38,33 @@ div {
   background: #EF2323;
   padding: 15px 30px;
   border-radius: 35px;
-  text-shadow: 1px 03px 10px rgb(0, 0, 0.5);
+  text-shadow: 1px 3px 10px rgba(0, 0, 0, 0.5);
   user-select: none;
   transition: 0.5s;
-  /* Change cursor to pointer on checkbox itself */
+  z-index: 1;
 }
 
-.checkbox-container #checkBox label input[type="checkbox"] {
+.checkbox-container .checkBox input[type="checkbox"] {
   display: none;
 }
 
-span {
-  z-index: 4;
-}
-
-.checkbox-container #checkBox label span:before {
-  content: '  ';
+.checkbox-container .checkBox label span:before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 50%;
-  border-radius: 35px 35px 0px 0px;
-  background: #dc0909;
+  border-radius: 35px 35px 0 0;
+  background: #322626;
   transition: 0.5s;
   z-index: -1;
-
 }
 
-.checkbox-container #checkBox label input[type="checkbox"]:checked~span:before {
-
+.checkbox-container .checkBox input[type="checkbox"]:checked~span:before {
   background-color: purple;
 }
 
-.checkbox-container #checkBox label input[type="checkbox"]:checked~span {
-
+.checkbox-container .checkBox input[type="checkbox"]:checked~span {
   background-color: yellow;
 }

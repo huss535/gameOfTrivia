@@ -8,7 +8,7 @@ function HomePage() {
             <Button buttonTitle="Join Game" eventHandler={() => { }} />
             <Button buttonTitle="Create Game" eventHandler={() => { }} />
             <div className="checkbox-container">
-                <div id="checkBox">
+                <div className="checkBox">
                     <label >
 
                         <input type="checkbox" />
