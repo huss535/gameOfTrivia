@@ -15,3 +15,60 @@
   color: black;
 
 }
+
+div {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 50px;
+}
+
+
+.checkbox-container #checkBox label span {
+  /* Adjust spacing between checkbox and label text */
+  border: solid;
+  color: black;
+  display: inline-block;
+  position: relative;
+  background: #EF2323;
+  padding: 15px 30px;
+  border-radius: 35px;
+  text-shadow: 1px 03px 10px rgb(0, 0, 0.5);
+  user-select: none;
+  transition: 0.5s;
+  /* Change cursor to pointer on checkbox itself */
+}
+
+.checkbox-container #checkBox label input[type="checkbox"] {
+  display: none;
+}
+
+span {
+  z-index: 4;
+}
+
+.checkbox-container #checkBox label span:before {
+  content: '  ';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  border-radius: 35px 35px 0px 0px;
+  background: #dc0909;
+  transition: 0.5s;
+  z-index: -1;
+
+}
+
+.checkbox-container #checkBox label input[type="checkbox"]:checked~span:before {
+
+  background-color: purple;
+}
+
+.checkbox-container #checkBox label input[type="checkbox"]:checked~span {
+
+  background-color: yellow;
+}
