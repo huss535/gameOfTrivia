@@ -18,6 +18,9 @@
 
 div {}
 
+.checkbox-container {
+  margin: 15px;
+}
 
 .checkbox-container .checkBox label {
   position: relative;
