@@ -1,3 +1,66 @@
-body {
-  background-color: blueviolet;
+.button {
+  background-color: #EF2323;
+  color: blanchedalmond;
+  border: none;
+  border-radius: 5px;
+  padding-inline: 10px;
+  padding-block: 5px;
+  margin: 20px;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.button:hover {
+
+  background-color: #DECE9C;
+  color: black;
+
+}
+
+div {}
+
+.checkbox-container {
+  margin: 15px;
+}
+
+.checkbox-container .checkBox label {
+  position: relative;
+}
+
+.checkbox-container .checkBox label span {
+  border: solid 2px #EF2323;
+  color: white;
+  display: inline-block;
+  position: relative;
+  background: none;
+  padding: 15px 30px;
+  border-radius: 35px;
+  text-shadow: 1px 3px 10px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  transition: 0.5s;
+  z-index: 1;
+}
+
+.checkbox-container .checkBox input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-container .checkBox label span:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  border-radius: 35px 35px 0 0;
+  background: none;
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.checkbox-container .checkBox input[type="checkbox"]:checked~span:before {
+  background-color: #EF2323;
+}
+
+.checkbox-container .checkBox input[type="checkbox"]:checked~span {
+  background-color: #c71111;
 }

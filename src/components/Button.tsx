@@ -8,7 +8,7 @@ interface ButtonProps {
 function Button(props: ButtonProps) {
 
 
-    return (<button onClick={props.eventHandler}>{props.buttonTitle}</button>);
+    return (<button className="button" onClick={props.eventHandler}>{props.buttonTitle}</button>);
 
 
 
