@@ -21,12 +21,24 @@ app.get('/', (req: Request, res: Response) => {
 app.post("/fetchQuestions", async (req: Request, res: Response) => {
     const { topics } = req.body;
     // console.log(topics["categoryList"])
-    const prompt = `Please provide 20 fun trivia question of moderate difficulty about:${topics["categoryList"]} \n provide the questions followed by four answers of which only one is true the rmaining three are false \n Here is a sample for what the response should be: (What is the capital of Egypt-Cairo-paris-london-alexandria, and the following qestions follow the same form)`
+    const prompt = `Please provide 20 trivia questions of moderate difficulty in JSON format (suitable for general knowledge quizzes) about: ${topics["categoryList"]}
+
+Output the questions as a JSON array. Each object in the array should have two keys:
+* "question": the trivia question as a string
+* "answers": an array of strings containing the four answer options, with the correct answer as the first element
+
+Example:
+[
+  {"question": "What is the capital of Egypt?", "answers": ["Cairo", "Paris", "London", "Alexandria"]},
+  // ... more questions
+]
+`;
+
 
     const result = await model.generateContent(prompt);
     const response = result.response;
     const text = response.text();
-    console.log(text);
+    //console.log(text);
     res.send(text)
 
 });
