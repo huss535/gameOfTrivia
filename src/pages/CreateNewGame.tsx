@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import { CategoryChecker } from "../components/CategoryChecker";
+import { useNavigate } from "react-router-dom";
 
 function CreateNewGame() {
+    const [selectedItems, setSelectedItems] = useState<string[]>([])
+    const navigate = useNavigate();
     //generate game code
     function generateSixDigitCode() {
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -20,7 +23,8 @@ function CreateNewGame() {
     const categoryList = ["Movies", "TV", "History", "Geography", "Politics", "YA novels", "Celebrities", "Rock", "Grunge", "Game of thrones", "Succession", "US presidents", "Music"]
     console.log(JSON.stringify({ categoryList }));
 
-    const [selectedItems, setSelectedItems] = useState<string[]>([])
+
+    // handler for selecting categories for creating questions
     const handleSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
         if (checked) {
@@ -42,6 +46,10 @@ function CreateNewGame() {
         if (selectedItems.length == 0) {
 
             alert("You have not selected anything")
+        } else {
+
+            navigate('/triviaPage')
+
         }
     };
 
