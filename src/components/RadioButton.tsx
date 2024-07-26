@@ -1,14 +1,17 @@
 interface radioButtonProps {
     radioText: string;
-    handler: React.ChangeEventHandler<HTMLInputElement>;
+    handler: (value: string, isCorrect: boolean) => void;
     isCorrect: boolean// Use React.ChangeEventHandler for onChange events
 }
 
 
 function RadioButton(props: radioButtonProps) {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.handler(event.target.value, props.isCorrect);
+    };
     return (<div className="radioText" >
         <label className={props.isCorrect ? 'correctAnswer' : ''} >
-            <input type="radio" name="answers" value={props.radioText} onChange={props.handler} />
+            <input type="radio" name="answers" value={props.radioText} onChange={handleChange} />
             <span>{props.radioText}</span>
         </label>
     </div>);

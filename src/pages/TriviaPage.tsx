@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RadioButton from "../components/RadioButton";
 
 function QuestionContainer() {
     const [selectedValue, setSelectedValue] = useState('');
 
-    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedValue(event.target.value);
+    const handleRadioChange = (value: string, isCorrect: boolean) => {
+
+
+        //action performed depending on selecting the right or wrong answers
     };
+
 
     return (<div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh' }}>
         <div id="questionContainer">
