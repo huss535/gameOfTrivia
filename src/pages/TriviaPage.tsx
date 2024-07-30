@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import RadioButton from "../components/RadioButton";
+import { useLocation } from "react-router-dom";
 
 function QuestionContainer() {
     const [selectedValue, setSelectedValue] = useState('');
-
+    const location = useLocation();
+    const fetchedQuestions = location.state?.fetchedQuestions;
+    console.log(fetchedQuestions);
     const handleRadioChange = (value: string, isCorrect: boolean) => {
 
 

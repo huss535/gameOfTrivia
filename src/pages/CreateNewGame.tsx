@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../components/Button";
 import { CategoryChecker } from "../components/CategoryChecker";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function CreateNewGame() {
     const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -16,12 +17,11 @@ function CreateNewGame() {
         return code;
     }
 
-    // Example usage:
 
 
 
     const categoryList = ["Movies", "TV", "History", "Geography", "Politics", "YA novels", "Celebrities", "Rock", "Grunge", "Game of thrones", "Succession", "US presidents", "Music"]
-    console.log(JSON.stringify({ categoryList }));
+    // console.log(JSON.stringify({ categoryList }));
 
 
     // handler for selecting categories for creating questions
@@ -48,7 +48,17 @@ function CreateNewGame() {
             alert("You have not selected anything")
         } else {
 
-            navigate('/triviaPage')
+            const params = { topics: { categoryList: selectedItems.toString() } }
+            console.log(import.meta.env.VITE_BACKEND_SERVER)
+            axios.post(import.meta.env.VITE_BACKEND_SERVER + "/fetchQuestions", params).then((response) => {
+                const fetchedQuestions = response.data;
+                console.log(fetchedQuestions)
+                navigate("/triviaPage", { state: { fetchedQuestions: fetchedQuestions } });
+            }).catch((error) => {
+                alert(error);
+            })
+
+            //    navigate('/triviaPage')
 
         }
     };
