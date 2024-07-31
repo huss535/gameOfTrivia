@@ -1,7 +1,9 @@
 interface radioButtonProps {
     radioText: string;
     handler: (value: string, isCorrect: boolean) => void;
-    isCorrect: boolean// Use React.ChangeEventHandler for onChange events
+    isCorrect: boolean; // Use React.ChangeEventHandler for onChange events
+    isChecked: boolean;
+    disabled: boolean
 }
 
 
@@ -11,7 +13,7 @@ function RadioButton(props: radioButtonProps) {
     };
     return (<div className="radioText" >
         <label className={props.isCorrect ? 'correctAnswer' : ''} >
-            <input type="radio" name="answers" value={props.radioText} onChange={handleChange} />
+            <input disabled={props.disabled} checked={props.isChecked} type="radio" name="answers" value={props.radioText} onChange={handleChange} />
             <span>{props.radioText}</span>
         </label>
     </div>);
