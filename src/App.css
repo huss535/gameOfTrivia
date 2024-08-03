@@ -1,18 +1,27 @@
+#mainHeader {
+  font-size: xxx-large;
+  text-shadow: -3px 3px #517891;
+}
+
 .button {
-  background-color: #EF2323;
+  font-size: large;
+  background-color: inherit;
   color: blanchedalmond;
-  border: none;
-  border-radius: 5px;
+  border: solid;
+  border-radius: 10px;
   padding-inline: 10px;
   padding-block: 5px;
+  padding-inline: 30px;
+  padding-block: 10px;
   margin: 20px;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  transition: 0.5s;
 }
 
 .button:hover {
 
   background-color: #DECE9C;
   color: black;
+  letter-spacing: 1.5px;
 
 }
 

@@ -3,11 +3,18 @@ import Button from "../components/Button";
 
 function HomePage() {
     const navigate = useNavigate()
+
     return (
-        <div>
-            <h1>Game of trivia</h1>
-            <Button buttonTitle="Join Game" eventHandler={() => { navigate("/") }} />
-            <Button buttonTitle="Create Game" eventHandler={() => { navigate("/newGame/category") }} />
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh' }}>
+            <h1 id="mainHeader" >
+                Game of Trivia
+            </h1>
+
+            <div>
+                <Button buttonTitle="Join Game" eventHandler={() => { navigate("/") }} />
+                <Button buttonTitle="Create Game" eventHandler={() => { navigate("/newGame/category") }} />
+
+            </div>
 
 
         </div>);
