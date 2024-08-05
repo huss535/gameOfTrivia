@@ -2,8 +2,13 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import cors from 'cors';
+import * as admin from 'firebase-admin';
+import path from 'path';
 
 dotenv.config();
+const credentialPath: string = process.env.KEYPATH || '';
+const serviceAccount = require(path.resolve(credentialPath));
+
 const port = 3000;
 const app = express();
 app.use(express.json());
@@ -11,10 +16,34 @@ app.use(cors());
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || " ");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript with Express!');
+
+const credential = serviceAccount as admin.ServiceAccount;
+
+admin.initializeApp({
+
+    credential: admin.credential.cert(credential),
+    databaseURL: 'https://gameoftrivia-e4359-default-rtdb.firebaseio.com'
 });
 
+const db = admin.database();
+
+
+
+app.post('/newGame', async (req: Request, res: Response) => {
+    try {
+        // Fetch data from the database
+        const snapshot = await db.ref('/').once('value');
+        const data = snapshot.val();
+
+        // Send data as response
+        res.json(data);
+    } catch (error) {
+        // Handle errors
+        const e = error as Error;
+
+        res.status(500).send(`Error fetching data: ${e.message}`);
+    }
+});
 // Endpoint that handles generating the questions through Gemini API
 app.post("/fetchQuestions", async (req: Request, res: Response) => {
     const { topics } = req.body;
