@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RadioButton from "../components/RadioButton";
 import { useLocation } from "react-router-dom";
 import Button from "../components/Button";
+import ProgressBar from "../components/ProgressBar";
 
 const shuffleElements = (array: string[]) => {
     let shuffledArray = array.slice();
@@ -19,6 +20,11 @@ function QuestionContainer() {
     const [answers, setAnswers] = useState(["", "", "", ""]);
     const location = useLocation();
     const fetchedQuestions = location.state?.fetchedQuestions || [];
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        document.documentElement.style.setProperty('--progress', `${progress}%`);
+    }, [progress]);
 
     const handleRadioChange = (value: string, isCorrect: boolean) => {
 
@@ -28,6 +34,7 @@ function QuestionContainer() {
     };
 
     const handleClick = () => {
+        setProgress(previousProgress => Math.min(previousProgress + 5, 100))
         setIndex(prevIndex => prevIndex + 1);
 
     }
@@ -48,6 +55,7 @@ function QuestionContainer() {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh' }}>
+
             <div id="questionContainer">
                 <h1>{fetchedQuestions[index].question}</h1>
             </div>
@@ -65,6 +73,7 @@ function QuestionContainer() {
             </div>
 
             <Button buttonTitle="Next" eventHandler={handleClick} />
+            <ProgressBar />
         </div>
     );
 }
