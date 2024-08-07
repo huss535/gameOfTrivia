@@ -35,7 +35,7 @@ interface triviaQuestion {
 interface gameSession {
     sessionKey: string;
     sessionInfo: triviaQuestion[];
-    numberOfPlayers: number;
+    userId: string;
     isActive: boolean;
 
 
@@ -270,12 +270,12 @@ app.post('/newGame', async (req: Request, res: Response) => {
         let newGameSession: gameSession = {
             sessionKey: sessionString,
             sessionInfo: parsedData,
-            numberOfPlayers: 1,
+            userId: "Harry",
             isActive: true
         };
 
         // Fetch data from the database
-        const ref = await db.ref('/');
+        const ref = await db.ref(`/sessions/${sessionString}`);
         await ref.set({
             gameSession: newGameSession
         });
