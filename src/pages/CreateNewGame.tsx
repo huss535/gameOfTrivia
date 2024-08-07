@@ -13,9 +13,8 @@ function CreateNewGame() {
 
 
     const categoryList = [
-        "Movies", "TV", "History", "Geography", "Politics", "YA novels",
-        "Celebrities", "Rock", "Grunge", "Game of thrones", "Succession",
-        "US presidents", "Music"
+        "Movies", "TV", "Sports", "Geography", "Politics",
+        "Celebrities", "Music", "Literature", "Pop culture"
     ];
 
     const handleSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,14 +58,17 @@ function CreateNewGame() {
                     <h2>Fetching your questions</h2>
                 </div>
             ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '150vh' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh' }}>
                     <div style={{ display: 'flex', flexWrap: 'wrap', width: '500px', justifyContent: 'center' }}>
                         {categoryList.map((category, index) => (
                             <CategoryChecker checkBoxText={category} key={category} handler={handleSelection} />
                         ))}
                     </div>
-                    <Button buttonTitle="Create" eventHandler={handleButtonClick} />
 
+                    <div>
+                        <Button buttonTitle="Host Game" eventHandler={handleButtonClick} />
+                        <Button buttonTitle="Play Solo" eventHandler={handleButtonClick} />
+                    </div>
 
                 </div>
             )}
