@@ -4,10 +4,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import cors from 'cors';
 import * as admin from 'firebase-admin';
 import path from 'path';
+import postgres from 'postgres';
 
 dotenv.config();
-const credentialPath: string = process.env.KEYPATH || '';
-const serviceAccount = require(path.resolve(credentialPath));
 
 const port = 3000;
 const app = express();
@@ -18,15 +17,8 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 import { v4 as uuidv4 } from 'uuid';
 
 
-const credential = serviceAccount as admin.ServiceAccount;
 
-admin.initializeApp({
 
-    credential: admin.credential.cert(credential),
-    databaseURL: 'https://gameoftrivia-e4359-default-rtdb.firebaseio.com'
-});
-
-const db = admin.database();
 
 interface triviaQuestion {
     question: string,
@@ -35,12 +27,28 @@ interface triviaQuestion {
 interface gameSession {
     sessionKey: string;
     sessionInfo: triviaQuestion[];
-    userId: string;
+    users: string[];
     isActive: boolean;
 
 
 
 }
+
+let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
+PGPASSWORD = decodeURIComponent(PGPASSWORD || " ");
+
+const sql = postgres({
+    host: PGHOST,
+    database: PGDATABASE,
+    username: PGUSER,
+    password: PGPASSWORD,
+    port: 5432,
+    ssl: 'require',
+    connection: {
+        options: `project=${ENDPOINT_ID}`,
+    },
+});
+
 
 async function generateQuestions(topics: any) {
     const modelResponse: string = `[
@@ -255,12 +263,54 @@ async function generateQuestions(topics: any) {
 
 }
 
+app.get("/", async (req: Request, res: Response) => {
+
+    const result = await sql`SELECT * from gamesessions`;
+    res.json(result);
+
+})
+
+
+app.post('/joinGame', async (req: Request, res: Response) => {
+    const { sessionKey, userName } = req.body;
+
+    try {
+        // Fetch the current list of users
+        const result = await sql`SELECT users FROM gamesessions WHERE sessionkey = ${sessionKey}`;
+        const users: string[] = result[0]?.users || [];
+
+        // Check if the user is already in the list
+        if (users.includes(userName)) {
+            console.log("User already added");
+            const sessionInfo = await sql`SELECT * FROM gamesessions WHERE sessionkey = ${sessionKey}`;
+
+            return res.json(sessionInfo);
+        }
+
+        // Add the new user to the list
+        const newUsers = [...users, userName];
+
+        // Update the game session with the new user
+        await sql`UPDATE gamesessions SET users = ${sql.array(newUsers)} WHERE sessionkey = ${sessionKey}`;
+        const sessionInfo = await sql`SELECT * FROM gamesessions WHERE sessionkey = ${sessionKey}`;
+        console.log("User added to game session");
+        res.json(sessionInfo);
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send("An error occurred while joining the game");
+    }
+});
+
+
 //endpoint to define new games and add them to database
 app.post('/newGame', async (req: Request, res: Response) => {
-    const { topics } = req.body;
+    const { topics, userName } = req.body;
 
     let sessionString: string = uuidv4();
     sessionString = sessionString.slice(0, 8);
+    const existingSessions = await sql`SELECT 1 FROM gamesessions WHERE sessionkey = ${sessionString}`;
+
 
     try {
         const responseText: string = await generateQuestions(topics);
@@ -270,15 +320,19 @@ app.post('/newGame', async (req: Request, res: Response) => {
         let newGameSession: gameSession = {
             sessionKey: sessionString,
             sessionInfo: parsedData,
-            userId: "Harry",
+            users: [userName],
             isActive: true
         };
 
-        // Fetch data from the database
-        const ref = await db.ref(`/sessions/${sessionString}`);
-        await ref.set({
-            gameSession: newGameSession
-        });
+        await sql`
+        INSERT INTO gamesessions (sessionkey, sessioninfo, users, isactive) 
+        VALUES (
+            ${newGameSession.sessionKey}, 
+            ${JSON.stringify(newGameSession.sessionInfo)}, 
+            ${newGameSession.users}, 
+            ${newGameSession.isActive}
+        )
+    `;
 
         console.log("Successful");
 
