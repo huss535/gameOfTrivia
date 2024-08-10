@@ -4,6 +4,7 @@ import './App.css'
 import CreateNewGame from './pages/CreateNewGame';
 import HomePage from './pages/HomePage';
 import TriviaPage from './pages/TriviaPage';
+import HostGameCreate from './pages/HostGameCreate';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" Component={HomePage} />
         <Route path="/newGame/category" Component={CreateNewGame} />
         <Route path="/triviaPage" Component={TriviaPage} />
+        <Route path="/hostingGame" Component={HostGameCreate} />
 
 
       </Routes>

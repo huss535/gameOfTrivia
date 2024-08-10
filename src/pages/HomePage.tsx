@@ -11,7 +11,7 @@ function HomePage() {
             </h1>
 
             <div>
-                <Button buttonTitle="Join Game" eventHandler={() => { navigate("/") }} />
+                <Button buttonTitle="Join Game" eventHandler={() => { navigate("/hostingGame") }} />
                 <Button buttonTitle="Create Game" eventHandler={() => { navigate("/newGame/category") }} />
 
             </div>

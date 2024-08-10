@@ -19,7 +19,8 @@
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.24.1",
-    "save": "^2.9.0"
+    "save": "^2.9.0",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

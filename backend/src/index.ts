@@ -5,6 +5,9 @@ import cors from 'cors';
 import * as admin from 'firebase-admin';
 import path from 'path';
 import postgres from 'postgres';
+import { WebSocketServer } from 'ws';
+
+
 
 dotenv.config();
 
@@ -301,6 +304,20 @@ app.post('/joinGame', async (req: Request, res: Response) => {
         res.status(500).send("An error occurred while joining the game");
     }
 });
+
+app.get("/sessionByKey", async (req: Request, res: Response) => {
+
+    const sessionKey: string = req.query.sessionKey as string;
+    try {
+        const result = await sql`SELECT * from gamesessions WHERE sessionKey= ${sessionKey}`;
+        res.json(result)
+    } catch (e: any) {
+
+        res.status(500).send(e.message)
+    }
+
+
+})
 
 
 //endpoint to define new games and add them to database

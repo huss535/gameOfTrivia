@@ -4,6 +4,7 @@ import { CategoryChecker } from "../components/CategoryChecker";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { TailSpin } from 'react-loader-spinner';
+import { uniqueNamesGenerator, starWars, adjectives, colors, animals, NumberDictionary } from 'unique-names-generator';
 
 function CreateNewGame() {
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -28,12 +29,15 @@ function CreateNewGame() {
         }
     };
 
-    const handleButtonClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    //handles game creation
+    const handleButtonClick = (buttonTitle: string, event: React.MouseEvent<HTMLButtonElement>) => {
         if (selectedItems.length === 0) {
+            console.log(buttonTitle)
             alert("You have not selected anything");
-        } else {
+        } else if (buttonTitle == "Play Solo") {
+
             const params = { topics: { categoryList: selectedItems.toString() } };
-            console.log(import.meta.env.VITE_BACKEND_SERVER);
+            // console.log(import.meta.env.VITE_BACKEND_SERVER);
             setLoading(true);
             axios.post(import.meta.env.VITE_BACKEND_SERVER + "/fetchQuestions", params)
                 .then((response) => {
@@ -48,7 +52,19 @@ function CreateNewGame() {
                     setLoading(false);
                 });
         }
+        else {
+            /*  const lowerCaseName: string = uniqueNamesGenerator({
+                 dictionaries: [adjectives, animals],
+                 style: 'lowerCase',
+                 separator: "-"
+             }); */
+            navigate("/hostingGame", { state: selectedItems })
+
+
+        }
     };
+
+
 
     return (
         <>
@@ -69,7 +85,6 @@ function CreateNewGame() {
                         <Button buttonTitle="Host Game" eventHandler={handleButtonClick} />
                         <Button buttonTitle="Play Solo" eventHandler={handleButtonClick} />
                     </div>
-
                 </div>
             )}
         </>
