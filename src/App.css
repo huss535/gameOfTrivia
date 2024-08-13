@@ -212,9 +212,14 @@ input[type="radio"] {
   transition: 0.5s ease;
 }
 
-
-#modal {
-  border: solid 4px #F9E2AF;
-  border-radius: 8px;
-  padding: 30px;
+.text-input {
+  width: 30vw;
+  height: 60px;
+  border: solid 4px;
+  border-radius: 10px;
+  background-color: #F9E2AF;
+  color: black;
+  font-size: x-large;
+  text-align: center;
+  border-color: #517891;
 }

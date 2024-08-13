@@ -5,6 +5,8 @@ import CreateNewGame from './pages/CreateNewGame';
 import HomePage from './pages/HomePage';
 import TriviaPage from './pages/TriviaPage';
 import HostGameCreate from './pages/HostGameCreate';
+import Lobby from './pages/Lobby';
+import GuestJoin from './pages/GuestJoin';
 
 function App() {
 
@@ -17,6 +19,8 @@ function App() {
         <Route path="/newGame/category" Component={CreateNewGame} />
         <Route path="/triviaPage" Component={TriviaPage} />
         <Route path="/hostingGame" Component={HostGameCreate} />
+        <Route path="/lobby" Component={Lobby} />
+        <Route path='/guestJoin' Component={GuestJoin} />
 
 
       </Routes>

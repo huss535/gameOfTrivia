@@ -2,23 +2,34 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import cors from 'cors';
-import * as admin from 'firebase-admin';
-import path from 'path';
 import postgres from 'postgres';
-import { WebSocketServer } from 'ws';
-
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { v4 as uuidv4 } from 'uuid';
 
 
 dotenv.config();
-
 const port = 3000;
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+//Websocket
+const server = createServer();
+const io = new Server(server, {
+    cors: {
+        origin: '*', // Your frontend URL
+        methods: ['GET', 'POST']
+    }
+});
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || " ");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-import { v4 as uuidv4 } from 'uuid';
+io.on('connection', (socket) => {
+    console.log('A new client connected');
 
+    // Emit a custom event to the connected client
+    socket.emit('welcome', { message: 'Welcome to the server!' });
+});
 
 
 
@@ -37,6 +48,8 @@ interface gameSession {
 
 }
 
+
+// Database credentials
 let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 PGPASSWORD = decodeURIComponent(PGPASSWORD || " ");
 
@@ -290,12 +303,17 @@ app.post('/joinGame', async (req: Request, res: Response) => {
             return res.json(sessionInfo);
         }
 
+
         // Add the new user to the list
         const newUsers = [...users, userName];
-
         // Update the game session with the new user
         await sql`UPDATE gamesessions SET users = ${sql.array(newUsers)} WHERE sessionkey = ${sessionKey}`;
         const sessionInfo = await sql`SELECT * FROM gamesessions WHERE sessionkey = ${sessionKey}`;
+
+        //for updating user joining game in real time
+        //io.emit("joiningLobby", { userName })
+        io.to(sessionKey).emit("joiningLobby", newUsers);
+
         console.log("User added to game session");
         res.json(sessionInfo);
 
@@ -303,14 +321,36 @@ app.post('/joinGame', async (req: Request, res: Response) => {
         console.error('Error:', error);
         res.status(500).send("An error occurred while joining the game");
     }
+
+
+});
+io.on('connection', (socket) => {
+    socket.on('joinRoom', (sessionKey) => {
+        socket.join(sessionKey);
+        console.log(`User joined room: ${sessionKey}`);
+    });
 });
 
-app.get("/sessionByKey", async (req: Request, res: Response) => {
+app.get("/getSessionByKey", async (req: Request, res: Response) => {
 
     const sessionKey: string = req.query.sessionKey as string;
     try {
         const result = await sql`SELECT * from gamesessions WHERE sessionKey= ${sessionKey}`;
         res.json(result)
+    } catch (e: any) {
+
+        res.status(500).send(e.message)
+    }
+
+
+})
+
+app.get("/getUserByKey", async (req: Request, res: Response) => {
+
+    const sessionKey: string = req.query.sessionKey as string;
+    try {
+        const result = await sql`SELECT users from gamesessions WHERE sessionKey= ${sessionKey}`;
+        res.json(result[0])
     } catch (e: any) {
 
         res.status(500).send(e.message)
@@ -387,4 +427,7 @@ app.post("/fetchQuestions", async (req: Request, res: Response) => {
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+server.listen(3080, () => {
+    console.log('WebSocket server running on http://localhost:3080');
 });

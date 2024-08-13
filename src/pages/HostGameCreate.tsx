@@ -1,13 +1,14 @@
 import axios from "axios";
 import Button from "../components/Button";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TailSpin } from "react-loader-spinner";
 
 function HostGameCreate() {
     const [userName, setUserName] = useState("")
     const location = useLocation();
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const topics = location.state;
     console.log(topics);
@@ -19,6 +20,8 @@ function HostGameCreate() {
         axios.post(import.meta.env.VITE_BACKEND_SERVER + "/newGame", params).then((response) => {
             const fetchedQuestions = response.data;
             console.log(fetchedQuestions)
+            navigate("/lobby", { state: { sessionKey: fetchedQuestions.sessionKey, userName: userName } })
+
         }).catch((error) => {
             alert(error);
         })
@@ -40,8 +43,9 @@ function HostGameCreate() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
                 {/*   <h1>Your name for this game is {sessionData.users[0]}</h1>
             <h1>Others can join your session using this code: {sessionData.sessionKey}</h1> */}
-
-                <Button buttonTitle="Start game" eventHandler={() => { }} />
+                <label><h1>Enter a name</h1></label>
+                <input className="text-input" onChange={(e) => { setUserName(e.target.value) }} />
+                <Button buttonTitle="Start game" eventHandler={handleClick} />
             </div>
 
         )

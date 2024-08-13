@@ -14,7 +14,7 @@ export const CategoryChecker = (props: checkBoxProps) => {
                 <label >
 
                     <input type="checkbox" value={props.checkBoxText} onChange={props.handler} />
-                    <span>{props.checkBoxText}</span>
+                    <span >{props.checkBoxText}</span>
 
                 </label>
             </div>
