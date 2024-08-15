@@ -294,7 +294,9 @@ app.post('/joinGame', async (req: Request, res: Response) => {
         // Fetch the current list of users
         const result = await sql`SELECT users FROM gamesessions WHERE sessionkey = ${sessionKey}`;
         const users: string[] = result[0]?.users || [];
-
+        if (result.length == 0) {
+            return res.send("Session does not exist")
+        }
         // Check if the user is already in the list
         if (users.includes(userName)) {
             console.log("User already added");
@@ -336,7 +338,12 @@ app.get("/getSessionByKey", async (req: Request, res: Response) => {
     const sessionKey: string = req.query.sessionKey as string;
     try {
         const result = await sql`SELECT * from gamesessions WHERE sessionKey= ${sessionKey}`;
-        res.json(result)
+        if (result.length == 0) {
+            res.send("Session does not exist")
+        } else {
+            res.json(result)
+        }
+
     } catch (e: any) {
 
         res.status(500).send(e.message)
@@ -350,7 +357,11 @@ app.get("/getUserByKey", async (req: Request, res: Response) => {
     const sessionKey: string = req.query.sessionKey as string;
     try {
         const result = await sql`SELECT users from gamesessions WHERE sessionKey= ${sessionKey}`;
-        res.json(result[0])
+        if (result.length == 0) {
+            res.send("Session does not exist")
+        } else {
+            res.json(result[0])
+        }
     } catch (e: any) {
 
         res.status(500).send(e.message)

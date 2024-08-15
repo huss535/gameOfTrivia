@@ -2,25 +2,34 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
+import Button from "../components/Button";
 
 function Lobby() {
     const location = useLocation();
     const sessionKey = location.state.sessionKey;
+    const user = location.state.user;
+    const [isCreator, setIsCreator] = useState(false);
     const [socket, setSocket] = useState<Socket | null>(null);
     const [users, setUsers] = useState<string[]>([""]);
 
     useEffect(() => {
-        /* axios.get(import.meta.env.VITE_BACKEND_SERVER + `/getUserByKey?sessionKey=${sessionKey}`).then((response) => {
+        if (user === users[0]) {
+            setIsCreator(true)
+        }
 
-            setUsers((previousList) => [response.data.users]);
-        }).catch((error) => {
-            console.log(error)
-        }); */
-
-        setUsers(["Andrew", "Jackson", "Aron", "same", "jack", "dcjndknvsi"])
+    }, [users]);
 
 
-    }, [])
+    useEffect(() => {
+        axios.get(import.meta.env.VITE_BACKEND_SERVER + `/getUserByKey?sessionKey=${sessionKey}`)
+            .then((response) => {
+                setUsers(response.data.users);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [sessionKey]);
+
     useEffect(() => {
         // Establish a socket connection
         const newSocket = io("http://localhost:3080");
@@ -55,23 +64,26 @@ function Lobby() {
 
             <br />
             <div style={{
-
-                gap: '30px',
-                width: '20vw',
+                height: '20%',
+                gap: "20px",
+                width: '30vw',
                 display: 'flex',
                 flexWrap: 'wrap',
-                justifyContent: 'center', /* Centers items in each row */
-                alignContent: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignContent: "space-around",
                 padding: '30px',
                 borderRadius: '10px',
                 color: 'white'
             }}>
                 {users.length > 0 ? (
-                    users.map((user) => <span key={user}>{user}</span>)
+                    users.map((user, index) => (<div key={index}><span >{user}</span></div>))
                 ) : (
                     <span>No players yet</span>
                 )}
             </div>
+
+            {isCreator ? <Button buttonTitle="Start Game" eventHandler={() => { }} /> : null}
 
         </div>
     );

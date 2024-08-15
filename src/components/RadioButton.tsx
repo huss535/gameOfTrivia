@@ -1,6 +1,6 @@
 interface radioButtonProps {
     radioText: string;
-    handler: (value: string, isCorrect: boolean) => void;
+    handler: (value?: string, isCorrect?: boolean) => void;
     isCorrect: boolean; // Use React.ChangeEventHandler for onChange events
     isChecked: boolean;
     disabled: boolean
