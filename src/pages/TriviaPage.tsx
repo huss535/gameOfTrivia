@@ -3,6 +3,7 @@ import RadioButton from "../components/RadioButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import ProgressBar from "../components/ProgressBar";
+import axios from "axios";
 
 const shuffleElements = (array: string[]) => {
     let shuffledArray = array.slice();
@@ -15,15 +16,19 @@ const shuffleElements = (array: string[]) => {
 
 function QuestionContainer() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [fetchedQuestions, setFetchedQuestions] = useState(location.state?.fetchedQuestions);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [answerCounter, setAnswerCounter] = useState(0);
     const [index, setIndex] = useState(0);
     const [correctAnswer, setCorrectAnswer] = useState("");
+    const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState(["", "", "", ""]);
-    const location = useLocation();
-    const fetchedQuestions = location.state?.fetchedQuestions || [];
     const [progress, setProgress] = useState(0);
-    console.log(fetchedQuestions)
+    const [isEnd, setIsEnd] = useState(false);
+
+    const sessionKey = location.state.sessionKey;
+
     useEffect(() => {
         document.documentElement.style.setProperty('--progress', `${progress}%`);
     }, [progress]);
@@ -34,11 +39,10 @@ function QuestionContainer() {
 
     const handleClick = () => {
         if (selectedValue) {
-            // Check if the selected answer is correct
             if (selectedValue === correctAnswer) {
-                setAnswerCounter(previousValue => previousValue + 1);
+                setAnswerCounter(prevValue => prevValue + 1);
             }
-            setProgress((previousProgress) => Math.min(previousProgress + 100 / fetchedQuestions.length, 100));
+            setProgress(prevProgress => Math.min(prevProgress + 100 / fetchedQuestions.length, 100));
             setIndex(prevIndex => prevIndex + 1);
             setSelectedValue(null); // Reset selected value
         } else {
@@ -47,41 +51,63 @@ function QuestionContainer() {
     };
 
     useEffect(() => {
-        if (fetchedQuestions.length > 0 && index < fetchedQuestions.length) {
-            let displayedAnswers = shuffleElements(fetchedQuestions[index].answers);
-            setAnswers(displayedAnswers);
-            setCorrectAnswer(fetchedQuestions[index].answers[0]); // Adjust based on your data
+        if (sessionKey) {
+            axios.get(`${import.meta.env.VITE_BACKEND_SERVER}/getSessionByKey?sessionKey=${sessionKey}`)
+                .then(response => {
+                    //console.log(typeof (response.data.sessioninfo))
+                    setFetchedQuestions(JSON.parse(response.data.sessioninfo));
+                })
+                .catch(error => {
+                    console.error('Failed to fetch session data:', error);
+                    // Optional: Handle this with user feedback
+                });
+        }
+    }, [sessionKey]);
+
+    useEffect(() => {
+        if (fetchedQuestions) {
+            if (index >= fetchedQuestions.length) {
+                setIsEnd(true);
+                return;
+            }
+
+            if (fetchedQuestions.length > 0 && index < fetchedQuestions.length) {
+                const displayedAnswers = shuffleElements(fetchedQuestions[index].answers);
+                setQuestion(fetchedQuestions[index].question);
+                setAnswers(displayedAnswers);
+                setCorrectAnswer(fetchedQuestions[index].answers[0]); // Adjust based on your data
+            }
         }
     }, [index, fetchedQuestions]);
 
-    if (index >= fetchedQuestions.length) {
-        return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh', fontSize: '35px' }}>
-            <p>
-                Your score is: {answerCounter}/{fetchedQuestions.length}
-            </p>
-            <Button buttonTitle="Return to main page" eventHandler={() => { navigate("/") }} />
-        </div>;
-    }
-
     return (
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh', margin: '30px' }}>
-            <div id="questionContainer">
-                <h1>{fetchedQuestions[index].question}</h1>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-                {answers.map((answer, idx) => (
-                    <RadioButton
-                        key={idx}
-                        isChecked={selectedValue === answer}
-                        isCorrect={correctAnswer === answer}
-                        radioText={answer}
-                        handler={() => handleRadioChange(answer)}
-                        disabled={selectedValue !== null}
-                    />
-                ))}
-            </div>
-            <Button buttonTitle="Next" eventHandler={handleClick} />
-            <ProgressBar />
+            {isEnd ? (
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh', fontSize: '35px' }}>
+                    <p>Your score is: {answerCounter}/{fetchedQuestions.length}</p>
+                    <Button buttonTitle="Return to main page" eventHandler={() => navigate("/")} />
+                </div>
+            ) : (
+                <>
+                    <div id="questionContainer">
+                        <h1>{question}</h1>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                        {answers.map((answer, idx) => (
+                            <RadioButton
+                                key={idx}
+                                isChecked={selectedValue === answer}
+                                isCorrect={correctAnswer === answer}
+                                radioText={answer}
+                                handler={() => handleRadioChange(answer)}
+                                disabled={selectedValue !== null}
+                            />
+                        ))}
+                    </div>
+                    <Button buttonTitle="Next" eventHandler={handleClick} />
+                    <ProgressBar />
+                </>
+            )}
         </div>
     );
 }

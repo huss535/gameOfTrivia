@@ -314,7 +314,7 @@ app.post('/joinGame', async (req: Request, res: Response) => {
 
         //for updating user joining game in real time
         //io.emit("joiningLobby", { userName })
-        io.to(sessionKey).emit("joiningLobby", newUsers);
+        // io.to(sessionKey).emit("joiningLobby", newUsers);
 
         console.log("User added to game session");
         res.json(sessionInfo);
@@ -326,12 +326,56 @@ app.post('/joinGame', async (req: Request, res: Response) => {
 
 
 });
+
+const rooms: any = {}
+const gameState: any = {};
+
 io.on('connection', (socket) => {
-    socket.on('joinRoom', (sessionKey) => {
+    socket.on('joinRoom', (sessionKey, userName) => {
+
+        if (!rooms[sessionKey]) {
+            rooms[sessionKey] = [];
+            gameState[sessionKey] = "pending"
+        }
+
+        rooms[sessionKey].push({ id: socket.id, name: userName });
+
         socket.join(sessionKey);
-        console.log(`User joined room: ${sessionKey}`);
+
+        //io.to(sessionKey).emit("joinedRoom", { userName: userName });
+        io.to(sessionKey).emit("updateUserList", rooms[sessionKey].map((user: { id: string, name: any; }) => user.name));
+
+
+        //console.log(`User joined room: ${sessionKey}`);
+        if (gameState[sessionKey] === 'started') {
+            console.log("already started")
+            console.log(sessionKey)
+            io.to(sessionKey).emit('sessionStart', { message: 'The game has already started.' });
+        }
+        // console.log(socket.rooms)
+
+        socket.on("disconnect", () => {
+            // Remove user from room
+            rooms[sessionKey] = rooms[sessionKey].filter((user: { id: string, name: any }) => user.id !== socket.id);
+
+            // Broadcast updated user list to all clients in the room
+            io.to(sessionKey).emit("updateUserList", rooms[sessionKey].map((user: { id: string, name: any; }) => user.name));
+        });
+    });
+
+
+
+    socket.on("gameStart", (sessionKey) => {
+        //socket.join(sessionKey);
+        // console.log(sessionKey)
+        // console.log(socket.rooms)
+        //  console.log(io.sockets.adapter.rooms.get(sessionKey))
+        gameState[sessionKey] = "started"
+        console.log(io.sockets.adapter.rooms.get(sessionKey))
+        socket.in(sessionKey).emit("sessionStart"); // Notify only the clients in the room
     });
 });
+
 
 app.get("/getSessionByKey", async (req: Request, res: Response) => {
 
@@ -341,7 +385,7 @@ app.get("/getSessionByKey", async (req: Request, res: Response) => {
         if (result.length == 0) {
             res.send("Session does not exist")
         } else {
-            res.json(result)
+            res.json(result[0])
         }
 
     } catch (e: any) {

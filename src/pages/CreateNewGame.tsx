@@ -43,7 +43,7 @@ function CreateNewGame() {
                 .then((response) => {
                     const fetchedQuestions = response.data;
                     console.log(fetchedQuestions);
-                    navigate("/triviaPage", { state: { fetchedQuestions: fetchedQuestions } });
+                    navigate("/triviaPage", { state: { fetchedQuestions: fetchedQuestions, sessionKey: null } });
                 })
                 .catch((error) => {
                     alert(error);
