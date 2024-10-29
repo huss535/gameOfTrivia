@@ -6,27 +6,35 @@
 
 #mainHeader {
   font-size: 6rem;
-  text-shadow: -3px 3px #517891;
+  text-shadow: -5px 5px #517891;
 }
 
 .button {
 
+  width: 11rem;
+  background-color: #517891;
+  color: whitesmoke;
 
-  background-color: #70A3B8;
-  color: #2d2d39;
-  border: none;
-  border-radius: 5rem;
-
+  border-radius: 10px;
+  border: solid 2.5px;
+  border-color: #7fbce3;
   padding-inline: 1.5rem;
   padding-block: 1rem;
   margin: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12),
+    0 2px 2px rgba(0, 0, 0, 0.12),
+    0 4px 4px rgba(0, 0, 0, 0.12),
+    0 8px 8px rgba(0, 0, 0, 0.12),
+    0 16px 16px rgba(0, 0, 0, 0.12);
+
   transition: 0.3s;
 
 }
 
 .button:hover {
   cursor: pointer;
-  transform: translateY(-10px);
+
+  transform: translate3d(5px, 5px, 5px)
 }
 
 
@@ -40,7 +48,7 @@
 
 .checkbox-container .checkBox label span {
   cursor: pointer;
-  border: solid 2px #F9E2AF;
+  border: solid 2px whitesmoke;
   display: inline-block;
   position: relative;
   background: none;
@@ -74,7 +82,7 @@ input[type="checkbox"] {
 }
 
 .checkbox-container .checkBox input[type="checkbox"]:checked~span {
-  background-color: #51799167;
+  background-color: #2a4250;
 }
 
 
@@ -84,9 +92,9 @@ input[type="checkbox"] {
   justify-content: center;
   align-items: center;
   height: 35vh;
-  width: 50vw;
+  width: 40rem;
   text-align: center;
-  border: 4px solid #F9E2AF;
+  border: 4px solid whitesmoke;
   border-radius: 10px;
   background-color: #517891;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12),
@@ -97,23 +105,16 @@ input[type="checkbox"] {
 
 }
 
-@media screen and (max-width: 600px) {
-  #questionContainer {
-    font-size: 10px;
-  }
+#questionContainer h1,
+div div h1 {
+
+  font-size: 2.1rem;
+  line-height: 4rem;
 }
 
-@media screen and (min-width: 601px) and (max-width:1000px) {
-  #questionContainer {
-    font-size: 13px;
-  }
-}
 
-@media screen and (min-width:1001px) {
-  #questionContainer {
-    font-size: 20px;
-  }
-}
+
+
 
 
 input[type="radio"] {
@@ -127,11 +128,12 @@ input[type="radio"] {
 .radioText label span {
   position: relative;
   text-align: center;
-  border: solid 2.5px #F9E2AF;
+  justify-self: stretch;
+  border: solid 2.5px whitesmoke;
   border-radius: 10px;
   background: #517891;
   display: inline-block;
-  width: 20vw;
+  width: 15rem;
   margin: 20px;
   padding-inline: 20px;
   padding-block: 10px;
@@ -147,29 +149,46 @@ input[type="radio"] {
 
 }
 
-.radioText label input[type="radio"]:checked+span {
-  background-color: #c71111;
+.radioText label span:hover {
+  transform: translate3d(5px, 5px, 5px)
 }
+
+/* .radioText label input[type="radio"]:checked+span {
+  background-color: #c71111;
+} */
+.wrongAnswer input[type="radio"]:checked+span {
+  background-color: #c71111 !important;
+}
+
 
 .correctAnswer input[type="radio"]:checked+span {
   background-color: green !important;
 }
 
+.wrongOptions span {
+  background-color: #c71111 !important;
+
+}
+
+.correctOption span {
+  background-color: green !important;
+
+}
 
 
 .progress-container {
-  border: none;
-  border-color: #F9E2AF;
+  border: solid 3px;
+  border-color: whitesmoke;
   position: relative;
   width: 70vw;
-  height: 2rem;
+  height: 1rem;
   border-radius: 2rem;
   /* shorthand for padding-inline */
   background-color: inherit;
   overflow: hidden;
 }
 
-.progress-container::before {
+/* .progress-container::before {
   top: 0;
   bottom: 75%;
   position: absolute;
@@ -186,12 +205,13 @@ input[type="radio"] {
   content: " ";
   background-color: #51799167;
 }
-
+ */
 
 .progress-bar {
-  top: 25%;
+  top: 0;
+  bottom: 0;
   position: absolute;
-  height: 50%;
+
   border-radius: 0.2rem;
   /* Ensures the progress bar fills the container's height */
   /* Matches the container's border-radius */
@@ -204,11 +224,10 @@ input[type="radio"] {
 .text-input {
   width: 30vw;
   height: 60px;
-  border: solid 4px;
+  border: solid 2.5px whitesmoke;
   border-radius: 10px;
-  background-color: #F9E2AF;
-  color: black;
+  background: #517891;
+  color: whitesmoke;
   font-size: x-large;
   text-align: center;
-  border-color: #517891;
 }

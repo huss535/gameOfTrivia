@@ -10,7 +10,7 @@ function HostGameCreate() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-   
+
     const topics = location.state;
     console.log(topics);
 
@@ -44,8 +44,8 @@ function HostGameCreate() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
                 {/*   <h1>Your name for this game is {sessionData.users[0]}</h1>
             <h1>Others can join your session using this code: {sessionData.sessionKey}</h1> */}
-                {}
-                <label><h1>Enter a name</h1></label>
+                { }
+                <label><h1>Enter your name</h1></label>
                 <input className="text-input" onChange={(e) => { setUserName(e.target.value) }} />
                 <Button buttonTitle="Start game" eventHandler={handleClick} />
             </div>

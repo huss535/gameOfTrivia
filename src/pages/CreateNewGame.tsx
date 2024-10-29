@@ -12,10 +12,9 @@ function CreateNewGame() {
     const navigate = useNavigate();
 
 
-
     const categoryList = [
-        "Movies", "TV", "Sports", "Geography", "Politics",
-        "Celebrities", "Music", "Literature", "Pop culture"
+        "Movies", "TV", "Sports", "Geography", "History", "Politics",
+        "Celebrities", "Music", "Literature", "Pop culture", "Food", "Science", "General Knowledge"
     ];
 
     const handleSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,9 +80,12 @@ function CreateNewGame() {
                         ))}
                     </div>
 
+
+
                     <div>
-                        <Button buttonTitle="Host Game" eventHandler={handleButtonClick} />
-                        <Button buttonTitle="Play Solo" eventHandler={handleButtonClick} />
+                        {/* <Button buttonTitle="Host Game" eventHandler={handleButtonClick} /> */}
+                        <Button buttonTitle="Start" eventHandler={handleButtonClick} />
+
                     </div>
                 </div>
             )}

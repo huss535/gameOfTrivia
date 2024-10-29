@@ -44,7 +44,7 @@ function GuestJoin() {
             />
 
             <label>
-                <h1>Enter a name</h1>
+                <h1>Enter your name</h1>
             </label>
             <input
                 className="text-input"

@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import ProgressBar from "../components/ProgressBar";
 import axios from "axios";
 
+// Add shuffleElements function here
 const shuffleElements = (array: string[]) => {
     let shuffledArray = array.slice();
     for (let i = shuffledArray.length; i > 1; i--) {
@@ -54,12 +55,10 @@ function QuestionContainer() {
         if (sessionKey) {
             axios.get(`${import.meta.env.VITE_BACKEND_SERVER}/getSessionByKey?sessionKey=${sessionKey}`)
                 .then(response => {
-                    //console.log(typeof (response.data.sessioninfo))
                     setFetchedQuestions(JSON.parse(response.data.sessioninfo));
                 })
                 .catch(error => {
                     console.error('Failed to fetch session data:', error);
-                    // Optional: Handle this with user feedback
                 });
         }
     }, [sessionKey]);
@@ -84,15 +83,15 @@ function QuestionContainer() {
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh', margin: '30px' }}>
             {isEnd ? (
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', height: '100vh', fontSize: '35px' }}>
-                    <p>Your score is: {answerCounter}/{fetchedQuestions.length}</p>
-                    <Button buttonTitle="Return to main page" eventHandler={() => navigate("/")} />
+                    <h1>Your score is: {answerCounter}/{fetchedQuestions.length}</h1>
+                    <Button buttonTitle="Main Page" eventHandler={() => navigate("/")} />
                 </div>
             ) : (
                 <>
                     <div id="questionContainer">
                         <h1>{question}</h1>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', width: "40rem" }}>
                         {answers.map((answer, idx) => (
                             <RadioButton
                                 key={idx}
